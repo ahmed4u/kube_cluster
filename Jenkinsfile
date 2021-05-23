@@ -10,6 +10,7 @@ node {
                 accessKeyVariable: 'AWS_ACCESS_KEY_ID',
                 secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
             ]]){
+				if(Terraform_Action == 'Deploy') {
                     stage('Init') {
                         sh label: 'terraform init', script: "/tmp/terraform init -backend-config \"bucket=shifa4u-testbucket\""
                     }
@@ -23,13 +24,13 @@ node {
                     }
                     stage('Apply') {
                         sh label: 'terraform apply', script: "/tmp/terraform apply -lock=false -input=false tfplan"
-						script {
-							def logContent = Jenkins.getInstance().getItemByFullName(env.JOB_NAME).getBuildByNumber(Integer.parseInt(env.BUILD_NUMBER)).logFile.text
-							writeFile file: "kubebuildlog.txt", text: logContent
-							def kube_master = sh(script: 'grep master kubebuildlog.txt -A2| grep public| awk \'{print $3}\'| sed \'s/"//g\'', returnStdout: true).trim()
-							KUBE_MASTER_NODE = kube_master
-							println KUBE_MASTER_NODE
-						}
+                                                script {
+                                                        def logContent = Jenkins.getInstance().getItemByFullName(env.JOB_NAME).getBuildByNumber(Integer.parseInt(env.BUILD_NUMBER)).logFile.text
+                                                        writeFile file: "kubebuildlog.txt", text: logContent
+                                                        def kube_master = sh(script: 'grep master kubebuildlog.txt -A2| grep public| awk \'{print $3}\'| sed \'s/"//g\'', returnStdout: true).trim()
+                                                        KUBE_MASTER_NODE = kube_master
+                                                        println KUBE_MASTER_NODE
+                                                }
                     }
                     stage('Configuring K8s') {
                         script {
@@ -39,7 +40,8 @@ node {
                             sh "ssh -o StrictHostKeyChecking=no ubuntu@$KUBE_MASTER_NODE \"kubectl taint nodes --all node-role.kubernetes.io/master-\""
                             sh "rsync ubuntu@$KUBE_MASTER_NODE:/home/ubuntu/.kube/config kubeconfig_file > /dev/null"
                         }
-                    }
+                    }}
+					if(Terraform_Action == 'Destroy') {
                     stage('Destroy') {
                         script {
                             timeout(time: 10, unit: 'MINUTES') {
@@ -49,4 +51,5 @@ node {
                         sh label: 'Destroy environment', script: "/tmp/terraform destroy -lock=false -auto-approve"
                     }
                 }
+			}
 }
