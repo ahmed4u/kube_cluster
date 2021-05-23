@@ -19,7 +19,7 @@ node {
                         }
                     }
                     stage('Apply') {
-                        sh label: 'terraform apply', script: "terraform apply -lock=false -input=false tfplan"
+                        sh label: 'terraform apply', script: "/tmp/terraform apply -lock=false -input=false tfplan"
                     }
                 }
 }
