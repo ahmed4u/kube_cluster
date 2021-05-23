@@ -21,5 +21,13 @@ node {
                     stage('Apply') {
                         sh label: 'terraform apply', script: "/tmp/terraform apply -lock=false -input=false tfplan"
                     }
+					stage('Destroy') {
+                        sh label: 'terraform destroy', script: "/tmp/terraform destroy -out=tfplan -input=false"
+                        script {
+                            timeout(time: 10, unit: 'MINUTES') {
+                                input(id: "Deploy Gate", message: "Destroy environment?", ok: 'Destroy')
+                            }
+                        }
+                    }
                 }
 }
