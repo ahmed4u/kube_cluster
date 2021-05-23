@@ -1,4 +1,4 @@
-env.AWS_DEFAULT_REGION = 'ap-southeast-1'
+env.AWS_DEFAULT_REGION = 'us-west-1'
 node {
   git 'https://github.com/ahmed4u/kube_cluster.git'
   withCredentials([[
