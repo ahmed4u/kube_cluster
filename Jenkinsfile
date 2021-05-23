@@ -34,10 +34,10 @@ node {
                     }
                     stage('Configuring K8s') {
                         script {
-                            sh "ssh -o StrictHostKeyChecking=no ubuntu@$KUBE_MASTER_NODE \"sudo kubeadm init --pod-network-cidr 10.244.0.0/16 > /tmp/kube.conf\""
-                            sh "ssh -o StrictHostKeyChecking=no ubuntu@$KUBE_MASTER_NODE \"mkdir -p /home/ubuntu/.kube;sudo cp -i /etc/kubernetes/admin.conf /home/ubuntu/.kube/config;sudo chown ubuntu:ubuntu /home/ubuntu/.kube/config\""
-                            sh "ssh -o StrictHostKeyChecking=no ubuntu@$KUBE_MASTER_NODE \"kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml --kubeconfig /home/ubuntu/.kube/config\""
-                            sh "ssh -o StrictHostKeyChecking=no ubuntu@$KUBE_MASTER_NODE \"kubectl taint nodes --all node-role.kubernetes.io/master-\""
+                            //sh "ssh -o StrictHostKeyChecking=no ubuntu@$KUBE_MASTER_NODE \"sudo kubeadm init --pod-network-cidr 10.244.0.0/16 > /tmp/kube.conf\""
+                            //sh "ssh -o StrictHostKeyChecking=no ubuntu@$KUBE_MASTER_NODE \"mkdir -p /home/ubuntu/.kube;sudo cp -i /etc/kubernetes/admin.conf /home/ubuntu/.kube/config;sudo chown ubuntu:ubuntu /home/ubuntu/.kube/config\""
+                            //sh "ssh -o StrictHostKeyChecking=no ubuntu@$KUBE_MASTER_NODE \"kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml --kubeconfig /home/ubuntu/.kube/config\""
+                            //sh "ssh -o StrictHostKeyChecking=no ubuntu@$KUBE_MASTER_NODE \"kubectl taint nodes --all node-role.kubernetes.io/master-\""
                             sh "rsync ubuntu@$KUBE_MASTER_NODE:/home/ubuntu/.kube/config kubeconfig_file > /dev/null"
                         }
                     }}
