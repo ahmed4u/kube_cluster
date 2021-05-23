@@ -23,6 +23,8 @@ node {
 						script {
 							def logContent = Jenkins.getInstance().getItemByFullName(env.JOB_NAME).getBuildByNumber(Integer.parseInt(env.BUILD_NUMBER)).logFile.text
 							writeFile file: "kubebuildlog.txt", text: logContent
+							def kube_master = sh(script: 'grep master kubebuildlog.txt -A2| grep public| awk '{print $3}'', returnStdout: true)
+							println kube_master
 						}
                     }
                     stage('Destroy') {
@@ -35,4 +37,3 @@ node {
                     }
                 }
 }
-
