@@ -20,8 +20,12 @@ node {
                     }
                     stage('Apply') {
                         sh label: 'terraform apply', script: "/tmp/terraform apply -lock=false -input=false tfplan"
+						script {
+							def logContent = Jenkins.getInstance().getItemByFullName(env.JOB_NAME).getBuildByNumber(Integer.parseInt(env.BUILD_NUMBER)).logFile.text
+							writeFile file: "kubebuildlog.txt", text: logContent
+						}
                     }
-					stage('Destroy') {
+                    stage('Destroy') {
                         script {
                             timeout(time: 10, unit: 'MINUTES') {
                                 input(id: "Destroy Gate", message: "Destroy environment?", ok: 'Destroy')
@@ -31,3 +35,4 @@ node {
                     }
                 }
 }
+
