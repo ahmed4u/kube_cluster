@@ -89,6 +89,12 @@ resource "aws_security_group" "ingress_ssh" {
     to_port     = 22
     cidr_blocks = var.allowed_ssh_cidr_blocks
   }
+  ingress {
+    protocol    = "tcp"
+    from_port   = 30080
+    to_port     = 30080
+    cidr_blocks = var.allowed_ssh_cidr_blocks
+  }
 }
 
 #------------------------------------------------------------------------------#
