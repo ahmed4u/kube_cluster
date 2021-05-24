@@ -38,7 +38,7 @@ node {
                             //sh "ssh -o StrictHostKeyChecking=no ubuntu@$KUBE_MASTER_NODE \"mkdir -p /home/ubuntu/.kube;sudo cp -i /etc/kubernetes/admin.conf /home/ubuntu/.kube/config;sudo chown ubuntu:ubuntu /home/ubuntu/.kube/config\""
                             //sh "ssh -o StrictHostKeyChecking=no ubuntu@$KUBE_MASTER_NODE \"kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml --kubeconfig /home/ubuntu/.kube/config\""
                             //sh "ssh -o StrictHostKeyChecking=no ubuntu@$KUBE_MASTER_NODE \"kubectl taint nodes --all node-role.kubernetes.io/master-\""
-                            sh "rsync ubuntu@$KUBE_MASTER_NODE:/home/ubuntu/.kube/config kubeconfig_file > /dev/null"
+                            sh "rsync ubuntu@$KUBE_MASTER_NODE:/home/ubuntu/.kube/config $JENKINS_HOME/kubeconfig_file > /dev/null"
                         }
                     }}
 					if(Terraform_Action == 'Destroy') {
